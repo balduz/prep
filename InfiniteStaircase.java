@@ -1,5 +1,3 @@
-
-
 public class InfiniteStaircase {
   public static int getStepCombinations(int n) {
     if (n < 0) {
