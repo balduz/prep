@@ -70,7 +70,7 @@ public class MarsBases {
     }
   }
 
-  private static void addDistanceMetrics(int[][] distances, int[][] newDistances) {
+  private static void addDistanceMatrices(int[][] distances, int[][] newDistances) {
     for (int i = 0; i < distances.length; i++) {
       for (int j = 0; j < distances[0].length; j++) {
         distances[i][j] += newDistances[i][j];
@@ -98,7 +98,7 @@ public class MarsBases {
     for (Point base : bases) {
       int[][] newDistances = new int[rows][cols];
       populateDistancesFromPoint(base, marsMap, newDistances);
-      addDistanceMetrics(distances, newDistances);
+      addDistanceMatrices(distances, newDistances);
     }
 
     int minimumDistance = Integer.MAX_VALUE;
