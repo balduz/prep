@@ -1,4 +1,6 @@
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class PangramChecker {
@@ -34,7 +36,6 @@ public class PangramChecker {
       return null;
     }
     s = s.toLowerCase();
-
     if (alphabet == null) {
       alphabet = new HashSet<Character>();
       for (char c = 'a'; c <= 'z'; c++) {
@@ -42,19 +43,48 @@ public class PangramChecker {
       }
     }
 
+    Map<Character, Integer> charFreq = new HashMap<>();
+    for (char c : alphabet) {
+      charFreq.put(c, 0);
+    }
+
+    String maxPangram = null;
+    int lettersCovered = 0;
+    int start = 0;
     int alphabetSize = alphabet.size();
-    Set<Character> seenLetters = new HashSet<Character>();
-    for (int i = 0; i < s.length(); i++) {
-      char c = s.charAt(i);
-      if (alphabet.contains(c)) {
-        seenLetters.add(c);
-        if (seenLetters.size() == alphabetSize) {
-          return s.substring(0, ++i);
+
+    for (int end = 0; end < s.length(); end++) {
+      char cEnd = s.charAt(end);
+      if (!alphabet.contains(cEnd)) {
+        continue;
+      }
+
+      int freq = charFreq.get(cEnd);
+      if (freq == 0) {
+        lettersCovered++;
+        charFreq.put(cEnd, 1);
+      } else {
+        charFreq.put(cEnd, ++freq);
+      }
+
+      if (lettersCovered < alphabetSize) {
+        continue;
+      }
+      while (!alphabet.contains(s.charAt(start)) || charFreq.get(s.charAt(start)) > 1) {
+        if (alphabet.contains(s.charAt(start))) {
+          int startFreq = charFreq.get(s.charAt(start));
+          charFreq.put(s.charAt(start), --startFreq);
         }
+
+        start++;
+      }
+
+      if (maxPangram == null || maxPangram.length() > end - start) {
+        maxPangram = s.substring(start, end+1);
       }
     }
 
-    return null;
+    return maxPangram;
   }
 	
   public static void main(String[] args) {
@@ -67,6 +97,9 @@ public class PangramChecker {
     System.out.println(notPangram + ": " + shortestPangram(notPangram));
 
     String longPangram = "the d quick g brown fox jumps over lazy dog blaas dfsa";
+    System.out.println(longPangram + ": " + shortestPangram(longPangram));
+
+    longPangram = "the d quick g brown fox jumps over lazy dog abcdefghijklmnopqrstuvwxyz blaas dfsa";
     System.out.println(longPangram + ": " + shortestPangram(longPangram));
   }
 }
